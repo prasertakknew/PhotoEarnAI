@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>PhotoEarnAI · Local Graphics Studio</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/svg+xml" href="assets/photoearnai-logo.svg">
+</head>
+<body class="dark-theme">
+  <!-- Top Application Header & Menu Bar -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-logo">
+        <svg viewBox="0 0 32 32" width="22" height="22">
+          <rect width="32" height="32" rx="7" fill="#14171d" stroke="#28d7d1"/>
+          <path d="M9 8h10c6 0 10 4 10 8s-4 8-10 8h-4v4H9V8zm6 5v6h4c2 0 4-1 4-3s-2-3-4-3h-4z" fill="#28d7d1"/>
+        </svg>
+      </div>
+      <span class="brand-name">PhotoEarnAI <span class="badge">Local Studio</span></span>
+    </div>
+
+    <nav class="menu-bar">
+      <!-- File Menu -->
+      <div class="menu-item" data-menu="file">
+        <button class="menu-btn">File</button>
+        <div class="menu-dropdown">
+          <div class="dropdown-item" id="menu-new-doc"><span class="item-label">New Project...</span><span class="shortcut">Ctrl+N</span></div>
+          <div class="dropdown-item" id="menu-open-file"><span class="item-label">Open Image...</span><span class="shortcut">Ctrl+O</span></div>
+          <div class="dropdown-item" id="menu-place-image"><span class="item-label">Open Image as Layers...</span><span class="shortcut">Shift+Ctrl+O</span></div>
+          <div class="dropdown-item" id="menu-open-psd"><span class="item-label">Open PSD...</span></div>
+          <div class="dropdown-item" id="menu-open-video"><span class="item-label">Open Video as Layers...</span></div>
+          <div class="dropdown-item" id="menu-load-sample"><span class="item-label">Load Neon Camera Demo</span><span class="badge-sm">Demo</span></div>
+          <div class="dropdown-separator"></div>
+          <div class="dropdown-item" id="menu-save-json"><span class="item-label">Save Project (.json)</span><span class="shortcut">Ctrl+S</span></div>
+          <div class="dropdown-item" id="menu-export-psd"><span class="item-label">Export as PSD</span></div>
+          <div class="dropdown-separator"></div>
+          <div class="dropdown-item" id="menu-export-png"><span class="item-label">Export as PNG</span></div>
+          <div class="dropdown-item" id="menu-export-jpg"><span class="item-label">Export as JPG...</span></div>
+          <div class="dropdown-item" id="menu-export-webp"><span class="item-label">Export as WEBP</span></div>
+          <div class="dropdown-item" id="menu-export-bmp"><span class="item-label">Export as BMP</span></div>
+          <div class="dropdown-item" id="menu-export-svg"><span class="item-label">Export as SVG</span></div>
+          <div class="dropdown-item" id="menu-export-ai"><span class="item-label">Export as AI</span></div>
+          <div class="dropdown-item" id="menu-export-apng"><span class="item-label">Export as PNG (APNG)</span></div>
+          <div class="dropdown-item" id="menu-export-ico"><span class="item-label">Export as ICO</span></div>
+          <div class="dropdown-separator"></div>
+          <div class="dropdown-item" id="menu-export-video"><span class="item-label">Export as MP4</span></div>
+          <div class="dropdown-item" id="menu-export-webm"><span class="item-label">Export as WEBM</span></div>
+          <div class="dropdown-item" id="menu-export-gif"><span class="item-label">Export as GIF</span></div>
+          <div class="dropdown-separator"></div>
+          <div class="dropdown-item" id="menu-close-doc"><span class="item-label">Close Document</span></div>
+        </div>
+      </div>
+
+      <!-- Edit Menu -->
+      <div class="menu-item" data-menu="edit">
+        <button class="menu-btn">Edit</button>
+        <div class="menu-dropdown">
+          <div class="dropdown-item" id="menu-undo"><span class="item-label">Undo</span><span class="shortcut">Ctrl+Z</span></div>
+          <div class="dropdown-item" id="menu-redo"><span class="item-label">Redo</span><span class="shortcut">Ctrl+Y</span></div>
+          <div class="dropdown-item" id="menu-open-history"><span class="item-label">History (multi-step undo)</span></div>
+          <div class="dropdown-separator"></div>
+          <div class="dropdown-item" id="menu-clear-layer"><span class="item-label">Clear Active Layer</span><span class="shortcut">Del</span></div>
+          <div class="dropdown-item" id="menu-fill-color"><span class="item-label">Fill with Foreground</span></div>
+        </div>
+      </div>
+
+      <!-- Image Menu -->
+      <div class="menu-item" data-menu="image">
+        <button class="menu-btn">Image</button>
+        <div class="menu-dropdown">
+          <div class="dropdown-item" id="menu-filter-brightness"><span class="item-label">Brightness / Contrast...</span></div>
+          <div class="dropdown-item" data-adjust="levels"><span class="item-label">Levels...</span><span class="shortcut">Ctrl+L</span></div>
+          <div class="dropdown-item" data-adjust="curves"><span class="item-label">Curves...</span><span class="shortcut">Ctrl+M</span></div>
+          <div class="dropdown-item" data-adjust="huesat"><span class="item-label">Hue / Saturation...</span><span class="shortcut">Ctrl+U</span></div>
+          <div class="dropdown-item" data-adjust="colorbalance"><span class="item-label">Color Balance...</span></div>
+          <div class="dropdown-separator"></div>
+          <div class="dropdown-item" id="menu-filter-invert"><span class="item-label">Invert</span><span class="shortcut">Ctrl+I</span></div>
+          <div class="dropdown-item" data-adjust="threshold"><span class="item-label">Threshold...</span></div>
+          <div class="dropdown-item" data-adjust="posterize"><span class="item-label">Posterize...</span></div>
+          <div class="dropdown-item" id="menu-filter-grayscale"><span class="item-label">Grayscale (Desaturate)</span><span class="shortcut">Ctrl+Shift+U</span></div>
+          <div class="dropdown-item" id="menu-filter-sepia"><span class="item-label">Sepia Vintage</span></div>
+        </div>
+      </div>
+
+      <!-- Filter Menu -->
+      <div class="menu-item" data-menu="filter">
+        <button class="menu-btn">Filter</button>
+        <div class="menu-dropdown">
+          <div class="dropdown-item" id="menu-filter-blur"><span class="item-label">Gaussian Blur...</span></div>
+          <div class="dropdown-item" data-adjust="motionblur"><span class="item-label">Motion Blur...</span></div>
+          <div class="dropdown-item" data-adjust="radialblur"><span class="item-label">Radial Blur...</span></div>
+          <div class="dropdown-separator"></div>
+          <div class="dropdown-item" id="menu-filter-sharpen"><span class="item-label">Sharpen</span></div>
+          <div class="dropdown-item" data-adjust="highpass"><span class="item-label">High Pass...</span></div>
+          <div class="dropdown-separator"></div>
+          <div class="dropdown-item" data-adjust="mosaic"><span class="item-label">Pixelate (Mosaic)...</span></div>
+          <div class="dropdown-item" data-adjust="noise"><span class="item-label">Add Noise...</span></div>
+          <div class="dropdown-item" data-adjust="emboss"><span class="item-label">Stylize: Emboss</span></div>
+          <div class="dropdown-item" data-adjust="findedges"><span class="item-label">Stylize: Find Edges</span></div>
+          <div class="dropdown-separator"></div>
+          <div class="dropdown-item" id="menu-filter-vignette"><span class="item-label">Vignette</span></div>
+        </div>
+      </div>
+
+      <!-- Layer Menu -->
+      <div class="menu-item" data-menu="layer">
+        <button class="menu-btn">Layer</button>
+        <div class="menu-dropdown">
+          <div class="dropdown-item" id="menu-new-layer"><span class="item-label">New Layer</span><span class="shortcut">Ctrl+Shift+N</span></div>
+          <div class="dropdown-item" id="menu-dup-layer"><span class="item-label">Duplicate Layer</span><span class="shortcut">Ctrl+J</span></div>
+          <div class="dropdown-item" id="menu-del-layer"><span class="item-label">Delete Layer</span></div>
+          <div class="dropdown-separator"></div>
+          <div class="dropdown-item" id="menu-merge-down"><span class="item-label">Merge Down</span><span class="shortcut">Ctrl+E</span></div>
+          <div class="dropdown-item" id="menu-toggle-layer-vis"><span class="item-label">Toggle Visibility</span></div>
+          <div class="dropdown-separator"></div>
+          <div class="dropdown-item" id="menu-mask-add"><span class="item-label">Add Layer Mask</span></div>
+          <div class="dropdown-item" id="menu-mask-from-selection"><span class="item-label">Mask from Selection</span></div>
+          <div class="dropdown-item" id="menu-mask-edit"><span class="item-label">Edit Mask / Edit Pixels</span><span class="shortcut">\</span></div>
+          <div class="dropdown-item" id="menu-mask-toggle"><span class="item-label">Disable / Enable Mask</span></div>
+          <div class="dropdown-item" id="menu-mask-invert"><span class="item-label">Invert Mask</span></div>
+          <div class="dropdown-item" id="menu-mask-apply"><span class="item-label">Apply Mask</span></div>
+          <div class="dropdown-item" id="menu-mask-delete"><span class="item-label">Delete Mask</span></div>
+        </div>
+      </div>
+
+      <!-- Select Menu -->
+      <div class="menu-item" data-menu="select">
+        <button class="menu-btn">Select</button>
+        <div class="menu-dropdown">
+          <div class="dropdown-item" id="menu-select-all"><span class="item-label">Select All</span><span class="shortcut">Ctrl+A</span></div>
+          <div class="dropdown-item" id="menu-deselect"><span class="item-label">Deselect</span><span class="shortcut">Ctrl+D</span></div>
+          <div class="dropdown-item" id="menu-select-inverse"><span class="item-label">Inverse</span><span class="shortcut">Ctrl+Shift+I</span></div>
+          <div class="dropdown-separator"></div>
+          <div class="dropdown-item" id="menu-select-delete"><span class="item-label">Delete Selected Pixels</span><span class="shortcut">Del</span></div>
+          <div class="dropdown-item" id="menu-select-copy-layer"><span class="item-label">Layer via Copy</span><span class="shortcut">Ctrl+J</span></div>
+          <div class="dropdown-item" id="menu-select-fill"><span class="item-label">Fill Selection</span></div>
+        </div>
+      </div>
+
+      <!-- AI Menu -->
+      <div class="menu-item" data-menu="ai">
+        <button class="menu-btn menu-btn-ai">AI</button>
+        <div class="menu-dropdown">
+          <div class="dropdown-item" id="menu-ai-generate"><span class="item-label">Generate Image from Text...</span></div>
+          <div class="dropdown-item" id="menu-ai-remove-bg"><span class="item-label">Remove Background</span></div>
+          <div class="dropdown-item" id="menu-ai-edit"><span class="item-label">AI Edit (describe a change)...</span></div>
+          <div class="dropdown-separator"></div>
+          <div class="dropdown-item" id="menu-ai-enhance"><span class="item-label">Auto Enhance</span><span class="badge-sm">Instant</span></div>
+        </div>
+      </div>
+
+      <!-- View Menu -->
+      <div class="menu-item" data-menu="view">
+        <button class="menu-btn">View</button>
+        <div class="menu-dropdown">
+          <div class="dropdown-item" id="menu-zoom-in"><span class="item-label">Zoom In</span><span class="shortcut">Ctrl++</span></div>
+          <div class="dropdown-item" id="menu-zoom-out"><span class="item-label">Zoom Out</span><span class="shortcut">Ctrl+-</span></div>
+          <div class="dropdown-item" id="menu-zoom-fit"><span class="item-label">Fit to Screen</span><span class="shortcut">Ctrl+0</span></div>
+          <div class="dropdown-item" id="menu-zoom-100"><span class="item-label">100% Actual Pixels</span><span class="shortcut">Ctrl+1</span></div>
+        </div>
+      </div>
+
+      <!-- Studio Menu -->
+      <div class="menu-item" data-menu="studio">
+        <button class="menu-btn">Studio</button>
+        <div class="menu-dropdown">
+          <div class="dropdown-item" id="menu-open-studio"><span class="item-label">Open Studio</span><span class="badge-sm">Local-only</span></div>
+          <div class="dropdown-item" id="menu-edit-text"><span class="item-label">Edit Text Layer</span></div>
+          <div class="dropdown-item" id="menu-watermark"><span class="item-label">Place Watermark / Logo</span></div>
+          <div class="dropdown-separator"></div>
+          <div class="dropdown-item" id="menu-backdrop"><span class="item-label">AI &amp; Procedural Backdrop Generator...</span></div>
+        </div>
+      </div>
+
+      <!-- Help Menu -->
+      <div class="menu-item" data-menu="help">
+        <button class="menu-btn">Help</button>
+        <div class="menu-dropdown">
+          <div class="dropdown-item" id="menu-architecture-info"><span class="item-label">REA Architecture Report</span></div>
+          <div class="dropdown-item" id="menu-about"><span class="item-label">About PhotoEarnAI</span></div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="header-status">
+      <span id="doc-title-display">neon_camera.psd</span>
+      <span class="doc-meta-display" id="doc-meta-display">1024 × 1024 px @ 100%</span>
+      <button class="language-toggle" id="language-toggle" title="Switch language">EN</button>
+      <button class="dock-toggle" id="btn-toggle-dock" type="button" aria-controls="right-dock" aria-expanded="false" title="Layers / History panels">☰</button>
+    </div>
+  </header>
+
+  <!-- Contextual Options Sub-Bar -->
+  <div class="options-bar" id="options-bar">
+    <!-- Dynamic options injected based on active tool -->
+    <div class="tool-option-group" id="opt-common">
+      <span class="active-tool-label" id="opt-tool-name">Brush Tool</span>
+    </div>
+
+    <!-- Brush / Eraser options -->
+    <div class="tool-option-group" id="opt-brush-group">
+      <label>Size: <input type="range" id="opt-brush-size" min="1" max="500" value="18"><span id="opt-brush-size-val">18px</span></label>
+      <label>Opacity: <input type="range" id="opt-brush-opacity" min="5" max="100" value="100"><span id="opt-brush-opacity-val">100%</span></label>
+      <label>Hardness: <input type="range" id="opt-brush-hardness" min="0" max="100" value="80"><span id="opt-brush-hardness-val">80%</span></label>
+    </div>
+
+    <!-- Clone / Healing options -->
+    <div class="tool-option-group hidden" id="opt-clone-group">
+      <label>Clone:
+        <select id="opt-clone-mode">
+          <option value="brush">Brush (Alt+click)</option>
+          <option value="area">Area (Alt+drag)</option>
+        </select>
+      </label>
+      <span class="opt-chip" id="opt-clone-info">18px</span>
+      <button class="opt-btn" id="btn-clone-smaller" title="Smaller ([)">−</button>
+      <button class="opt-btn" id="btn-clone-bigger" title="Bigger (])">+</button>
+    </div>
+
+    <!-- Magic wand options -->
+    <div class="tool-option-group hidden" id="opt-wand-group">
+      <label>Tolerance: <input type="range" id="opt-wand-tolerance" min="0" max="128" value="32"><span id="opt-wand-tolerance-val">32</span></label>
+      <label><input type="checkbox" id="opt-wand-contiguous" checked> Contiguous</label>
+    </div>
+
+    <!-- Selection actions -->
+    <div class="tool-option-group hidden" id="opt-select-group">
+      <button class="opt-btn" id="btn-sel-deselect">Deselect</button>
+      <button class="opt-btn" id="btn-sel-invert">Inverse</button>
+      <button class="opt-btn" id="btn-sel-delete">Delete</button>
+      <button class="opt-btn" id="btn-sel-copy">Copy to layer</button>
+      <button class="opt-btn" id="btn-sel-mask">Mask</button>
+    </div>
+
+    <!-- Shape options -->
+    <div class="tool-option-group hidden" id="opt-shape-group">
+      <label>Type: 
+        <select id="opt-shape-type">
+          <option value="rect">Rectangle</option>
+          <option value="circle">Ellipse / Circle</option>
+          <option value="line">Line</option>
+        </select>
+      </label>
+      <label>Stroke: <input type="number" id="opt-shape-stroke-width" min="0" max="50" value="3">px</label>
+      <label><input type="checkbox" id="opt-shape-fill" checked> Fill</label>
+    </div>
+
+    <!-- Text options -->
+    <div class="tool-option-group hidden" id="opt-text-group">
+      <label>Font: 
+        <select id="opt-text-font">
+          <option value="Arial, sans-serif">Arial</option>
+          <option value="'Segoe UI', sans-serif">Segoe UI</option>
+          <option value="'Impact', sans-serif">Impact</option>
+          <option value="'Courier New', monospace">Courier New</option>
+          <option value="'Georgia', serif">Georgia</option>
+        </select>
+      </label>
+      <label>Size: <input type="number" id="opt-text-size" min="8" max="200" value="48">px</label>
+    </div>
+
+    <!-- Crop options -->
+    <div class="tool-option-group hidden" id="opt-crop-group">
+      <label><span data-crop-i18n="mode">Crop:</span>
+        <select id="opt-crop-mode">
+          <option value="layer">New layer (keep original)</option>
+          <option value="canvas">Crop whole canvas</option>
+        </select>
+      </label>
+      <label><span data-crop-i18n="source">From:</span>
+        <select id="opt-crop-source">
+          <option value="layer">Selected layer</option>
+          <option value="visible">All visible layers</option>
+        </select>
+      </label>
+    </div>
+
+    <!-- Zoom options -->
+    <div class="tool-option-group" id="opt-zoom-group">
+      <button class="opt-btn" id="btn-zoom-fit">Fit</button>
+      <button class="opt-btn" id="btn-zoom-100">100%</button>
+      <span class="zoom-level-badge" id="zoom-badge">100%</span>
+    </div>
+  </div>
+
+  <!-- Main Workspace Area -->
+  <main class="app-workspace">
+    <!-- Left Toolbar -->
+    <aside class="tool-palette" id="tool-palette">
+      <button class="tool-btn active" data-tool="move" title="Move Tool (V)">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"/></svg>
+      </button>
+      <button class="tool-btn" data-tool="marquee" title="Rectangular Marquee Tool (M)">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="3,3" d="M3 3h18v18H3z"/></svg>
+      </button>
+      <button class="tool-btn" data-tool="lasso" title="Lasso Tool (L)">⌁</button>
+      <button class="tool-btn" data-tool="wand" title="Magic Wand Tool (W)">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M3.3 19.3 14.6 8l1.4 1.4L4.7 20.7zM17 2l.9 2.1L20 5l-2.1.9L17 8l-.9-2.1L14 5l2.1-.9zm3.5 6 .6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6zM11 2l.6 1.4L13 4l-1.4.6L11 6l-.6-1.4L9 4l1.4-.6z"/></svg>
+      </button>
+      <button class="tool-btn" data-tool="crop" title="Crop Tool (C)">⌗</button>
+      <button class="tool-btn" data-tool="eyedropper" title="Eyedropper Tool (I)">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M20.7 5.6l-2.3-2.3a2.8 2.8 0 0 0-4 0l-2.4 2.4 4.3 4.3 2.4-2.4a2.8 2.8 0 0 0 0-4zm-5.8 4.7L10.6 6 3 13.6V18h4.4l7.5-7.7z"/></svg>
+      </button>
+      <button class="tool-btn" data-tool="brush" title="Brush Tool (B)">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M20.71 5.63l-2.34-2.34a2.85 2.85 0 0 0-3.97 0L3 14.65V21h6.35l11.36-11.36c1.1-1.1 1.1-2.9 0-4.01zM7.5 19H5v-2.5l9-9L16.5 10l-9 9z"/></svg>
+      </button>
+      <button class="tool-btn" data-tool="brushAdvanced" title="Advanced Brush Engine 67 Dynamics (Shift+B)">🖌+</button>
+      <button class="tool-btn" data-tool="clone" title="Clone Stamp Tool (S)">⌇</button>
+      <button class="tool-btn" data-tool="healing" title="Healing Brush Tool (J)">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M17.7 3.3a4.5 4.5 0 0 1 6.4 6.4l-3.6 3.6-6.4-6.4zm-4.9 4.9 6.4 6.4-9.5 9.5a4.5 4.5 0 0 1-6.4-6.4zM10 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm2 2a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-4 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm2 2a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" transform="scale(.92) translate(-1 -1)"/></svg>
+      </button>
+      <button class="tool-btn" data-tool="eraser" title="Eraser Tool (E)">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M15.14 3c-.76 0-1.53.3-2.12.88L3.46 13.44a3 3 0 0 0 0 4.24l2.83 2.83A3 3 0 0 0 8.41 21h8.59a1 1 0 1 0 0-2H11.4l6.98-6.98a3 3 0 0 0 0-4.24l-1.12-1.12A2.98 2.98 0 0 0 15.14 3zm-2.83 3.71l1.41 1.41-7.07 7.07-1.41-1.41 7.07-7.07z"/></svg>
+      </button>
+      <button class="tool-btn" data-tool="bucket" title="Paint Bucket Tool (K)">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M19 12h-1.5l1.8-6.3-2.9-.8L14.7 11H12v2h7v-1zm-9-8l-7 7 6 6 7-7-6-6zm-1.8 11.2L5.4 12.4l4.8-4.8 2.8 2.8-4.8 4.8zM20 18a2 2 0 1 1-4 0c0-1.1 2-3 2-3s2 1.9 2 3z"/></svg>
+      </button>
+      <button class="tool-btn" data-tool="gradient" title="Gradient Tool (G)">▱</button>
+      <button class="tool-btn" data-tool="blur" title="Blur Tool">◌</button>
+      <button class="tool-btn" data-tool="shape" title="Shape Tool (U)">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="none" stroke="currentColor" stroke-width="2" d="M4 4h16v16H4z"/></svg>
+      </button>
+      <button class="tool-btn" data-tool="text" title="Text Tool (T)">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M5 4v3h5.5v12h3V7H19V4H5z"/></svg>
+      </button>
+      <button class="tool-btn" data-tool="pen" title="Pen Tool (P)">P</button>
+      <button class="tool-btn" data-tool="hand" title="Hand Tool (H) - Pan canvas">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M18 11V6a2 2 0 0 0-4 0v4a2 2 0 0 0-4 0V3a2 2 0 0 0-4 0v11l-2.5-1.5a1.8 1.8 0 0 0-2.4.7c-.5.9-.2 2.1.7 2.6L7 20a5 5 0 0 0 3.5 1.5H16a5 5 0 0 0 5-5v-5a2 2 0 0 0-3-.5z"/></svg>
+      </button>
+      <button class="tool-btn" data-tool="zoom" title="Zoom Tool (Z)">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      </button>
+
+      <!-- Color Swatches & Swapping -->
+      <div class="color-picker-container">
+        <div class="color-swatch-fg" id="swatch-fg" title="Foreground Color" style="background-color: #0e8aef;"></div>
+        <div class="color-swatch-bg" id="swatch-bg" title="Background Color" style="background-color: #ffffff;"></div>
+        <button class="btn-swap-colors" id="btn-swap-colors" title="Switch Colors (X)">⇄</button>
+        <button class="btn-reset-colors" id="btn-reset-colors" title="Default Colors (D)">■</button>
+        <input type="color" id="hidden-color-picker" style="display:none;">
+      </div>
+      <button class="virtual-keys-btn" id="btn-virtual-keys" title="Virtual Keys">⌨</button>
+      <div class="virtual-keys-popover" id="virtual-keys-popover" hidden>
+        <div class="virtual-keys-buttons"><button type="button" data-modifier="ctrl">Ctrl</button><button type="button" data-modifier="alt">Alt</button><button type="button" data-modifier="shift">Shift</button><button type="button" id="btn-no-touch">NoTouch</button></div>
+        <div class="virtual-keys-status">No Touch</div>
+      </div>
+    </aside>
+
+    <!-- Center Canvas Viewport -->
+    <section class="canvas-viewport" id="canvas-viewport">
+      <!-- Checkerboard Wrapper for Documents -->
+      <div class="canvas-stage" id="canvas-stage">
+        <canvas id="main-canvas" width="1024" height="1024"></canvas>
+      </div>
+
+      <!-- Marquee Overlay Box -->
+      <div class="marquee-selection" id="marquee-selection"></div>
+
+      <!-- Empty State Dropzone -->
+      <div class="empty-dropzone" id="empty-dropzone" style="display: none;">
+        <div class="dropzone-card">
+          <svg viewBox="0 0 48 48" width="48" height="48" fill="#3b82f6"><path d="M8 8h32v32H8z" fill="none" stroke="#3b82f6" stroke-width="4" stroke-dasharray="6 6"/><path d="M24 16v16m-8-8h16" stroke="#3b82f6" stroke-width="4"/></svg>
+          <h3>Drop images here to open</h3>
+          <p>Supports PNG, JPG, WebP, SVG or project files</p>
+          <div class="dropzone-actions">
+            <button class="primary-btn" id="btn-dropzone-new">New Project</button>
+            <button class="secondary-btn" id="btn-dropzone-sample">Open Sample Art</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Side Dock Panels -->
+    <aside class="right-dock" id="right-dock">
+      <!-- Panel Header Tabs -->
+      <div class="dock-tabs">
+        <button class="tab-btn active" data-tab="layers">Layers</button>
+        <button class="tab-btn" data-tab="history">History</button>
+        <button class="tab-btn" data-tab="colors">Color</button>
+        <button class="tab-btn" data-tab="info">Info</button>
+        <button class="tab-btn" data-tab="video">Video</button>
+      </div>
+
+      <!-- Layers Tab Content -->
+      <div class="dock-panel active" id="panel-layers">
+        <!-- Layer Controls -->
+        <div class="layer-toolbar">
+          <select id="layer-blend-mode" class="layer-blend-select">
+            <option value="source-over">Normal</option>
+            <option value="multiply">Multiply</option>
+            <option value="screen">Screen</option>
+            <option value="overlay">Overlay</option>
+            <option value="darken">Darken</option>
+            <option value="lighten">Lighten</option>
+            <option value="color-dodge">Color Dodge</option>
+            <option value="difference">Difference</option>
+            <option value="exclusion">Exclusion</option>
+          </select>
+          <div class="layer-opacity-box">
+            <label>Op:</label>
+            <input type="number" id="layer-opacity-input" min="0" max="100" value="100">%
+          </div>
+        </div>
+
+        <!-- Layer Items List -->
+        <div class="layers-list" id="layers-list">
+          <!-- Dynamic Layers Injected Here -->
+        </div>
+
+        <!-- Layer Actions Footer -->
+        <div class="layer-footer">
+          <button class="layer-footer-btn" id="btn-layer-new" title="New Layer">
+            <svg viewBox="0 0 20 20" width="16" height="16"><path fill="currentColor" d="M10 3v14m-7-7h14" stroke="currentColor" stroke-width="2"/></svg>
+          </button>
+          <button class="layer-footer-btn" id="btn-layer-dup" title="Duplicate Layer">
+            <svg viewBox="0 0 20 20" width="16" height="16"><path fill="none" stroke="currentColor" stroke-width="1.8" d="M6 6h9v9H6zm-3-3h9v3H3z"/></svg>
+          </button>
+          <button class="layer-footer-btn" id="btn-layer-up" title="Move Layer Up">▲</button>
+          <button class="layer-footer-btn" id="btn-layer-down" title="Move Layer Down">▼</button>
+          <button class="layer-footer-btn" id="btn-layer-delete" title="Delete Layer">
+            <svg viewBox="0 0 20 20" width="16" height="16"><path fill="currentColor" d="M6 7v10h8V7H6zm2-4h4v2H8V3z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- History Tab Content -->
+      <div class="dock-panel" id="panel-history">
+        <div class="history-list" id="history-list">
+          <div class="history-item active">Open Document</div>
+        </div>
+        <div class="history-footer">
+          <button class="opt-btn" id="btn-history-clear">Clear History</button>
+        </div>
+      </div>
+
+      <!-- Color Swatches Tab Content -->
+      <div class="dock-panel" id="panel-colors">
+        <div class="color-palette-grid" id="color-palette-grid">
+          <!-- Quick Palette -->
+          <div class="color-tile" style="background: #000000" data-color="#000000"></div>
+          <div class="color-tile" style="background: #ffffff" data-color="#ffffff"></div>
+          <div class="color-tile" style="background: #ef4444" data-color="#ef4444"></div>
+          <div class="color-tile" style="background: #f97316" data-color="#f97316"></div>
+          <div class="color-tile" style="background: #eab308" data-color="#eab308"></div>
+          <div class="color-tile" style="background: #22c55e" data-color="#22c55e"></div>
+          <div class="color-tile" style="background: #06b6d4" data-color="#06b6d4"></div>
+          <div class="color-tile" style="background: #3b82f6" data-color="#3b82f6"></div>
+          <div class="color-tile" style="background: #8b5cf6" data-color="#8b5cf6"></div>
+          <div class="color-tile" style="background: #ec4899" data-color="#ec4899"></div>
+        </div>
+        <div class="color-inputs">
+          <label>Hex: <input type="text" id="color-hex-input" value="#3b82f6" maxlength="7"></label>
+        </div>
+      </div>
+
+      <!-- Info Tab Content -->
+      <div class="dock-panel" id="panel-info">
+        <div class="info-group">
+          <h4>Cursor Coordinates</h4>
+          <p>X: <span id="info-cursor-x">0</span> px</p>
+          <p>Y: <span id="info-cursor-y">0</span> px</p>
+        </div>
+        <div class="info-group">
+          <h4>Canvas Resolution</h4>
+          <p>Width: <span id="info-doc-w">1024</span> px</p>
+          <p>Height: <span id="info-doc-h">1024</span> px</p>
+          <p>Layers Count: <span id="info-layer-count">2</span></p>
+        </div>
+      </div>
+      <div class="dock-panel" id="panel-video">
+        <div class="info-group"><h4>Video layers</h4><p>MP4 / WebM / MKV / MOV → 2 fps layers</p></div>
+        <progress id="ffmpeg-progress" value="0" max="100"></progress>
+        <span id="ffmpeg-progress-label">Ready</span>
+        <button class="primary-btn" id="btn-video-open">Open Video</button>
+        <button class="secondary-btn" id="btn-video-export-mp4">Export MP4</button>
+        <button class="secondary-btn" id="btn-video-export-gif">Export GIF</button>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Bottom Status Bar -->
+  <footer class="app-statusbar">
+    <div class="status-left">
+      <span class="status-item" id="status-cursor">X: 0 Y: 0</span>
+      <span class="status-item" id="status-dims">1024 × 1024 px</span>
+      <span class="status-item" id="status-channels">RGB (8-bit)</span>
+    </div>
+    <div class="status-right">
+      <span class="status-item" id="status-engine">Engine: HTML5 2D Canvas Compositor (REA Spec)</span>
+    </div>
+  </footer>
+
+  <!-- Modal Dialog: New Project (template previews · size presets · settings) -->
+  <div class="modal-overlay" id="modal-new-doc">
+    <div class="modal-dialog np-dialog" role="dialog" aria-labelledby="np-title">
+      <div class="modal-header">
+        <h3 id="np-title" data-np="title">New Project</h3>
+        <button class="modal-close-btn" type="button" aria-label="Close">&times;</button>
+      </div>
+      <div class="np-body">
+        <section class="np-templates">
+          <div class="np-filter-row">
+            <label class="np-check"><input type="checkbox" id="np-with-symbols" checked> <span data-np="symbols">With Symbols</span></label>
+            <label class="np-check"><input type="checkbox" id="np-with-photo" checked> <span data-np="photo">With Photo</span></label>
+          </div>
+          <div class="np-filter-row">
+            <label class="np-keywords"><span data-np="keywords">Keywords:</span> <input type="text" id="np-keywords" maxlength="40"></label>
+            <button class="np-icon-btn" type="button" id="np-shuffle" title="New colours">&#x21bb;</button>
+          </div>
+          <div class="np-template-list" id="np-template-list"></div>
+        </section>
+        <section class="np-presets">
+          <div class="np-cats" id="np-cats" role="tablist"></div>
+          <div class="np-preset-grid" id="np-preset-grid"></div>
+        </section>
+        <section class="np-settings">
+          <label class="np-field"><span data-np="name">Name</span><input type="text" id="new-doc-name" value="New Project" maxlength="80"></label>
+          <div class="np-row-labels"><span data-np="width">Width</span><span data-np="height">Height</span></div>
+          <div class="np-row">
+            <input type="number" id="new-doc-width" value="1280" min="1" step="any">
+            <button class="np-icon-btn" type="button" id="np-swap" title="Swap width and height">&#8646;</button>
+            <input type="number" id="new-doc-height" value="720" min="1" step="any">
+            <select id="np-unit">
+              <option value="px">Pixels</option>
+              <option value="in">Inches</option>
+              <option value="cm">Centimeters</option>
+              <option value="mm">Millimeters</option>
+              <option value="pt">Points</option>
+            </select>
+          </div>
+          <label class="np-field"><span>DPI</span>
+            <span class="np-row">
+              <input type="number" id="np-dpi" value="72" min="1" max="2400">
+              <select id="np-dpi-unit"><option value="in">Pixels / Inch</option><option value="cm">Pixels / cm</option></select>
+            </span>
+          </label>
+          <label class="np-field"><span data-np="background">Background</span>
+            <span class="np-row">
+              <select id="new-doc-bg">
+                <option value="white">White</option>
+                <option value="black">Black</option>
+                <option value="transparent">Transparent</option>
+                <option value="custom">Custom colour</option>
+              </select>
+              <input type="color" id="np-bg-color" value="#ffffff" title="Background colour">
+            </span>
+          </label>
+          <p class="np-size-info" id="np-size-info"></p>
+          <button class="primary-btn np-create" type="button" id="btn-create-doc" data-np="create">Create</button>
+          <p class="np-hint" data-np="hint">Tip: click a template on the left to open it as template.psd with editable layers.</p>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Dialog: Brightness / Contrast -->
+  <div class="modal-overlay" id="modal-filter-bc">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Brightness / Contrast</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <label>Brightness: <span id="bc-bright-val">0</span></label>
+          <input type="range" id="bc-brightness" min="-100" max="100" value="0">
+        </div>
+        <div class="form-row">
+          <label>Contrast: <span id="bc-contrast-val">0</span></label>
+          <input type="range" id="bc-contrast" min="-100" max="100" value="0">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="secondary-btn modal-cancel-btn">Cancel</button>
+        <button class="primary-btn" id="btn-apply-bc">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Dialog: Gaussian Blur -->
+  <div class="modal-overlay" id="modal-filter-blur">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Gaussian Blur</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <label>Radius (px): <span id="blur-radius-val">4</span></label>
+          <input type="range" id="blur-radius" min="1" max="25" value="4">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="secondary-btn modal-cancel-btn">Cancel</button>
+        <button class="primary-btn" id="btn-apply-blur">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Dialog: Image adjustments / filters (built by features/adjustments.js) -->
+  <div class="modal-overlay" id="modal-adjust">
+    <div class="modal-dialog adjust-dialog" role="dialog" aria-labelledby="adjust-title">
+      <div class="modal-header">
+        <h3 id="adjust-title">Adjust</h3>
+        <button class="modal-close-btn" type="button" id="adjust-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body" id="adjust-body"></div>
+      <div class="modal-footer">
+        <label class="check-row adjust-preview"><input type="checkbox" id="adjust-preview" checked> <span id="adjust-preview-label">Preview</span></label>
+        <button class="secondary-btn" type="button" id="adjust-cancel">Cancel</button>
+        <button class="primary-btn" type="button" id="adjust-apply">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Dialog: Backdrop generator -->
+  <div class="modal-overlay" id="modal-backdrop">
+    <div class="modal-dialog adjust-dialog" role="dialog" aria-labelledby="backdrop-title">
+      <div class="modal-header">
+        <div><span class="eyebrow">PhotoEarnAI Studio</span><h3 id="backdrop-title">AI &amp; Procedural Backdrop Generator</h3></div>
+        <button class="modal-close-btn" type="button" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row"><label for="backdrop-name" id="backdrop-name-label">Layer name</label><input type="text" id="backdrop-name" maxlength="60" value="Backdrop"></div>
+        <div class="form-row"><label for="backdrop-style" id="backdrop-style-label">Style Preset:</label>
+          <select id="backdrop-style">
+            <option value="cyberpunk">Cyberpunk Neon Night</option>
+            <option value="synthwave">Retro 80s Synthwave Sunset</option>
+            <option value="nebula">Deep Nebula &amp; Cosmic Stars</option>
+            <option value="aurora">Emerald Northern Lights</option>
+          </select>
+        </div>
+        <canvas id="backdrop-preview" class="backdrop-preview" width="320" height="200"></canvas>
+        <button class="secondary-btn" type="button" id="backdrop-reroll">&#x21bb; <span id="backdrop-reroll-label">New variation</span></button>
+      </div>
+      <div class="modal-footer">
+        <button class="secondary-btn modal-cancel-btn" type="button">Cancel</button>
+        <button class="primary-btn" type="button" id="backdrop-generate">Generate Layer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Dialog: PhotoEarnAI Studio -->
+  <div class="modal-overlay" id="modal-studio">
+    <div class="modal-dialog studio-dialog">
+      <div class="modal-header">
+        <div>
+          <span class="eyebrow">PhotoEarnAI Studio</span>
+          <h3 data-i18n="Extensions">Extensions</h3>
+        </div>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="studio-note" data-i18n="Custom tools, presets, filters, fonts and plug-ins stay in this browser.">Custom tools, presets, filters, fonts and plug-ins stay in this browser.</div>
+      <div class="studio-tabs">
+        <button class="studio-tab active" data-studio-tab="tools">Tools</button>
+        <button class="studio-tab" data-studio-tab="presets">Presets</button>
+        <button class="studio-tab" data-studio-tab="filters">Filters</button>
+        <button class="studio-tab" data-studio-tab="plugins">Plug-ins</button>
+        <button class="studio-tab" data-studio-tab="fonts">Fonts</button>
+        <button class="studio-tab" data-studio-tab="watermark">Watermark</button>
+        <button class="studio-tab" data-studio-tab="text">Text</button>
+      </div>
+      <div class="studio-body">
+        <section class="studio-pane active" data-studio-pane="tools">
+          <div class="studio-form-grid">
+            <label>Name<input id="studio-tool-name" type="text" placeholder="My highlight tool"></label>
+            <label>Shortcut<input id="studio-tool-shortcut" type="text" maxlength="1" placeholder="J"></label>
+          </div>
+          <label>Description<input id="studio-tool-description" type="text" placeholder="Describe what this tool does"></label>
+          <label>Action<select id="studio-tool-action"><option value="focus-studio">Open Studio</option><option value="paint-accent">Paint accent</option><option value="add-watermark">Add watermark layer</option></select></label>
+          <button class="primary-btn" id="studio-add-tool">Add tool</button>
+          <div class="studio-list" id="studio-tools-list"></div>
+        </section>
+        <section class="studio-pane" data-studio-pane="presets">
+          <div class="studio-form-grid"><label>Name<input id="studio-preset-name" type="text" placeholder="Soft social glow"></label><label>Category<input id="studio-preset-category" type="text" value="My presets"></label></div>
+          <label>Preset filter<select id="studio-preset-filter"><option value="none">None</option><option value="brightness">Brightness / Contrast</option><option value="invert">Invert</option><option value="grayscale">Grayscale</option><option value="sepia">Sepia</option><option value="vignette">Vignette</option></select></label>
+          <button class="primary-btn" id="studio-add-preset">Add preset</button>
+          <div class="studio-list" id="studio-presets-list"></div>
+        </section>
+        <section class="studio-pane" data-studio-pane="filters">
+          <div class="studio-form-grid"><label>Name<input id="studio-filter-name" type="text" placeholder="My film tone"></label><label>Operation<select id="studio-filter-operation"><option value="brightness">Brightness / Contrast</option><option value="invert">Invert</option><option value="grayscale">Grayscale</option><option value="sepia">Sepia</option><option value="vignette">Vignette</option></select></label></div>
+          <button class="primary-btn" id="studio-add-filter">Add filter</button>
+          <div class="studio-list" id="studio-filters-list"></div>
+        </section>
+        <section class="studio-pane" data-studio-pane="plugins">
+          <p class="studio-help">Choose a local JavaScript module. PhotoEarnAI records it as a local-only plug-in and calls its optional <code>activate(api)</code> export after import.</p>
+          <input id="studio-plugin-file" type="file" accept=".js,.mjs" class="file-input-visible">
+          <div class="studio-list" id="studio-plugins-list"></div>
+        </section>
+        <section class="studio-pane" data-studio-pane="fonts">
+          <p class="studio-help">Fonts load for this browser session through the FontFace API. Metadata is persisted; binary font data is not uploaded.</p>
+          <input id="studio-font-file" type="file" accept=".woff,.woff2,.ttf,.otf" class="file-input-visible">
+          <div class="studio-list" id="studio-fonts-list"></div>
+        </section>
+        <section class="studio-pane" data-studio-pane="watermark">
+          <p class="studio-help">Place a logo or watermark into a normal editable layer.</p>
+          <input id="studio-watermark-file" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" class="file-input-visible">
+          <div class="studio-form-grid"><label>Scale<input id="studio-watermark-scale" type="number" min="0.05" max="4" step="0.05" value="0.35"></label><label>Opacity<input id="studio-watermark-opacity" type="number" min="0.05" max="1" step="0.05" value="0.55"></label></div>
+          <div class="studio-form-grid"><label>X<input id="studio-watermark-x" type="number" value="24"></label><label>Y<input id="studio-watermark-y" type="number" value="24"></label></div>
+          <label class="check-row"><input id="studio-watermark-tiled" type="checkbox"> Tile across canvas</label>
+          <button class="primary-btn" id="studio-place-watermark">Place watermark</button>
+          <div class="studio-list" id="studio-watermarks-list"></div>
+        </section>
+        <section class="studio-pane" data-studio-pane="text">
+          <p class="studio-help">Select a text layer, then edit its content and style here.</p>
+          <label>Text<textarea id="studio-text-content" rows="3" placeholder="Select a text layer"></textarea></label>
+          <div class="studio-form-grid"><label>Font<select id="studio-text-font"><option value="Arial, sans-serif">Arial</option><option value="'Segoe UI', sans-serif">Segoe UI</option><option value="Impact, sans-serif">Impact</option><option value="'Courier New', monospace">Courier New</option><option value="Georgia, serif">Georgia</option></select></label><label>Size<input id="studio-text-size" type="number" min="8" max="200" value="48"></label></div>
+          <div class="studio-form-grid"><label>Color<input id="studio-text-color" type="color" value="#ffffff"></label><label>Weight<select id="studio-text-weight"><option value="400">Regular</option><option value="700">Bold</option><option value="900">Black</option></select></label></div>
+          <button class="primary-btn" id="studio-apply-text">Apply text edit</button>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Dialog: AI -->
+  <div class="modal-overlay" id="modal-ai">
+    <div class="modal-dialog ai-dialog">
+      <div class="modal-header">
+        <div>
+          <span class="eyebrow">PhotoEarnAI · AI</span>
+          <h3 id="ai-title">Generate Image from Text</h3>
+        </div>
+        <button class="modal-close-btn" type="button">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="studio-help" id="ai-help"></p>
+        <div class="form-row" id="ai-prompt-row">
+          <label for="ai-prompt" id="ai-prompt-label">Describe the picture</label>
+          <textarea id="ai-prompt" rows="3" maxlength="1000"></textarea>
+        </div>
+        <div class="form-row" id="ai-size-row">
+          <label for="ai-size" id="ai-size-label">Shape</label>
+          <select id="ai-size">
+            <option value="1024x1024">Square 1024×1024</option>
+            <option value="1536x1024">Landscape 1536×1024</option>
+            <option value="1024x1536">Portrait 1024×1536</option>
+          </select>
+        </div>
+        <label class="check-row ai-check" id="ai-mask-row"><input type="checkbox" id="ai-as-mask" checked> <span id="ai-mask-label">Keep original pixels (cut out with an editable layer mask)</span></label>
+        <div class="ai-preview" id="ai-preview" hidden><img id="ai-preview-img" alt="AI result preview"></div>
+        <p class="ai-status" id="ai-status" role="status"></p>
+      </div>
+      <div class="modal-footer">
+        <button class="secondary-btn modal-cancel-btn" type="button" id="ai-cancel">Cancel</button>
+        <button class="primary-btn" type="button" id="ai-run">Generate</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden File Input for Open -->
+  <input type="file" id="file-input-image" accept="image/png,image/jpeg,image/webp,image/svg+xml,.json" style="display:none;">
+  <input type="file" id="file-input-place" accept="image/png,image/jpeg,image/webp,image/gif,image/bmp,image/svg+xml" multiple style="display:none;">
+  <input type="file" id="file-input-psd" accept=".psd,image/vnd.adobe.photoshop" style="display:none;">
+  <input type="file" id="file-input-video" accept="video/mp4,video/webm,video/x-matroska,video/quicktime,.mkv,.mov" style="display:none;">
+  <section id="brush-panel" class="feature-panel">
+    <strong>Brush Engine · PhotoCraft concepts</strong>
+    <label>Spacing <input id="brush-spacing" data-brush-key="spacing" type="range" min="5" max="100" value="18"></label>
+    <label>Scattering <input id="brush-scatter" data-brush-key="scatter" type="range" min="0" max="100" value="0"></label>
+    <label>Texture <input id="brush-texture" data-brush-key="texture" type="range" min="0" max="100" value="0"></label>
+  </section>
+
+  <!-- Scripts -->
+  <script src="js/engine/layer.js"></script>
+  <script src="js/engine/brushEngine.js"></script>
+  <script src="js/engine/smartObject.js"></script>
+  <script src="js/engine/adjustmentLayers.js"></script>
+  <script src="js/engine/layerStyles.js"></script>
+  <script src="js/engine/selection.js"></script>
+  <script src="js/engine/canvasEngine.js"></script>
+  <script src="js/filters/filterEngine.js"></script>
+  <script src="js/history/historyManager.js"></script>
+  <script src="js/tools/toolManager.js"></script>
+  <script src="js/tools/brushToolAdvanced.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/core/i18n.js"></script>
+  <script src="js/core/extensionRegistry.js"></script>
+  <script src="js/core/projectManager.js"></script>
+  <script src="js/core/watermarkManager.js"></script>
+  <script src="js/core/psdWasm.js"></script>
+  <script src="js/core/ffmpegWasm.js"></script>
+  <script src="js/features/brushPanel.js"></script>
+  <script src="js/features/smartObjectPanel.js"></script>
+  <script src="js/features/adjustmentPanel.js"></script>
+  <script src="js/features/layerStylePanel.js"></script>
+  <script src="js/features/advancedFeatures.js"></script>
+  <script src="js/core/extensionUI.js"></script>
+  <script src="js/features/editTools.js"></script>
+  <script src="js/features/aiTools.js"></script>
+  <script src="js/features/responsive.js"></script>
+  <script src="js/features/fileFeatures.js"></script>
+  <script src="js/features/adjustments.js"></script>
+</body>
+</html>

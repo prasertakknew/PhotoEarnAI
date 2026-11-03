@@ -1,0 +1,4 @@
+class LayerStyles {
+  static apply(ctx, layer) { const style = layer.styles; if (!style) return; const src = layer.getRenderSource ? layer.getRenderSource() : layer.canvas; ctx.save(); if (style.dropShadow?.enabled) { const s = style.dropShadow; ctx.shadowColor = s.color || 'rgba(0,0,0,.65)'; ctx.shadowBlur = s.blur ?? 18; ctx.shadowOffsetX = s.x ?? 8; ctx.shadowOffsetY = s.y ?? 8; ctx.globalAlpha = (layer.opacity || 1) * (s.opacity ?? 1); ctx.drawImage(src, layer.x, layer.y); } if (style.bevel?.enabled) { const b = style.bevel; ctx.shadowColor = b.highlight || 'rgba(255,255,255,.45)'; ctx.shadowBlur = b.size ?? 8; ctx.shadowOffsetX = -(b.size ?? 8) / 2; ctx.shadowOffsetY = -(b.size ?? 8) / 2; ctx.globalAlpha = .7; ctx.drawImage(src, layer.x, layer.y); } ctx.restore(); }
+}
+window.LayerStyles = LayerStyles;
