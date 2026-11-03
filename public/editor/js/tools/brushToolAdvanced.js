@@ -1,0 +1,4 @@
+class AdvancedBrushTool {
+  static bind(engine, toolManager) { const brush = window.BrushEngine; if (!brush) return; const sync = () => brush.configure({ size: Number(document.getElementById('opt-brush-size')?.value || 18), opacity: Number(document.getElementById('opt-brush-opacity')?.value || 100) / 100, hardness: Number(document.getElementById('opt-brush-hardness')?.value || 80) / 100, scatter: Number(document.getElementById('brush-scatter')?.value || 0) / 100, texture: Number(document.getElementById('brush-texture')?.value || 0) / 100, spacing: Number(document.getElementById('brush-spacing')?.value || 18) / 100 }); document.querySelectorAll('#brush-panel input').forEach(input => input.addEventListener('input', sync)); sync(); toolManager.advancedBrush = brush; }
+}
+window.AdvancedBrushTool = AdvancedBrushTool;
